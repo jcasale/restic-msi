@@ -1,75 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-<Product Id="*"
-         Name="restic"
-         Language="1033"
-         Version="$(var.ProductVersion)"
-         Manufacturer="https://restic.net"
-         UpgradeCode="2f0f4430-9195-463f-b136-6140b2b8ba50">
-    <Package InstallerVersion="200"
-             Compressed="yes"
-             InstallScope="perMachine"
-             Platform="x64"
-             InstallPrivileges="elevated"
-             Description="Restic is a fast, secure, efficient backup program."
-             Comments="restic v$(var.ProductVersion)" />
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package Name="restic" Language="1033" Version="$(var.ProductVersion)" Manufacturer="https://restic.net" UpgradeCode="2f0f4430-9195-463f-b136-6140b2b8ba50" InstallerVersion="200">
+    <SummaryInformation Description="Restic is a fast, secure, efficient backup program." />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="Data.cab" EmbedCab="yes" CompressionLevel="high" />
 
-    <Feature Id="Product"
-             Absent="disallow"
-             ConfigurableDirectory="INSTALLDIR"
-             Description="Restic for Windows"
-             Display="expand"
-             Title="Restic">
+    <Feature Id="Product" ConfigurableDirectory="INSTALLDIR" Description="Restic for Windows" Display="expand" Title="Restic" AllowAbsent="no">
       <ComponentGroupRef Id="ProductComponents" />
-      <Feature Id="EnvironmentPath"
-               Description="Adds restic to the system path."
-               Title="Update system path"
-               Level="2">
+      <Feature Id="EnvironmentPath" Description="Adds restic to the system path." Title="Update system path" Level="2">
         <ComponentRef Id="EnvironmentPathComponent" />
       </Feature>
     </Feature>
 
     <UI>
-      <UIRef Id="WixUI_FeatureTree" />
-
+      <ui:WixUI Id="WixUI_FeatureTree" />
       <!-- Remove LicenseAgreementDlg. -->
       <Publish Dialog="WelcomeDlg"
                Control="Next"
                Event="NewDialog"
                Value="CustomizeDlg"
-               Order="99">NOT Installed</Publish>
+               Order="2" />
       <Publish Dialog="CustomizeDlg"
                Control="Back"
                Event="NewDialog"
                Value="WelcomeDlg"
-               Order="99">NOT Installed</Publish>
+               Order="2" />
     </UI>
 
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
-  </Product>
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="INSTALLDIR" Name="Restic" />
+    </StandardDirectory>
 
-  <Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFiles64Folder">
-        <Directory Id="INSTALLDIR" Name="Restic" />
-      </Directory>
-    </Directory>
-  </Fragment>
-
-  <Fragment>
-    <DirectoryRef Id="TARGETDIR">
-      <Component Id="EnvironmentPathComponent" Guid="360181f7-40a9-4bdf-bd9e-8556c6d884bd">
-        <Environment Id="UpdatePath"
-                     Name="PATH"
-                     Action="set"
-                     Permanent="no"
-                     System="yes"
-                     Part="last"
-                     Value="[INSTALLDIR]" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
+    <Component Id="EnvironmentPathComponent" Guid="360181f7-40a9-4bdf-bd9e-8556c6d884bd" Directory="INSTALLDIR">
+      <Environment Id="UpdatePath" Name="PATH" Action="set" Permanent="no" System="yes" Part="last" Value="[INSTALLDIR]" />
+    </Component>
+  </Package>
 </Wix>
