@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
   <Package Name="restic" Language="1033" Version="$(var.ProductVersion)" Manufacturer="https://restic.net" UpgradeCode="2f0f4430-9195-463f-b136-6140b2b8ba50">
-    <SummaryInformation Description="Restic is a fast, secure, efficient backup program." Comment="Restic v$(var.ProductVersion)" />
+    <SummaryInformation Description="Restic is a fast, secure, efficient backup program." Comments="Restic v$(var.ProductVersion)" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="Data.cab" EmbedCab="yes" CompressionLevel="high" />
 
